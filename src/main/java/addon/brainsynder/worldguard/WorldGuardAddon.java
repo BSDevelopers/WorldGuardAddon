@@ -1,4 +1,4 @@
-package addons.brainsynder.worldguard;
+package addon.brainsynder.worldguard;
 
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;

@@ -1,4 +1,4 @@
-package addons.brainsynder.worldguard;
+package addon.brainsynder.worldguard;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
