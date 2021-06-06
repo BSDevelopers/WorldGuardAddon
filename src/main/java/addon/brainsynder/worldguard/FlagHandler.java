@@ -13,6 +13,8 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import simplepets.brainsynder.api.plugin.SimplePets;
+import simplepets.brainsynder.debug.DebugLevel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -51,15 +53,22 @@ public class FlagHandler {
 
     private boolean query(Player player, Location loc, StateFlag flag) {
         if (player != null) {
-            // TODO bypass permission?
-            if (player.hasPermission("pet.bypass.worldguard")) return true;
+            SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Player " + player.getName() + " exists.");
+            if (player.hasPermission("pet.bypass.worldguard")) {
+                SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Player has the bypass permission for WG. Skipping...");
+                return true;
+            }
         }
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         // Get the region manager for the world we're inWorld
         RegionManager manager = container.get(BukkitAdapter.adapt(loc.getWorld()));
+        if (manager == null) {
+            SimplePets.getDebugLogger().debug(DebugLevel.DEBUG,
+                    "No region manager found for " + loc.getWorld().getName() + ". Will be passing this as a green light.");
+            return true;
+        }
         // Uses the query cache
         RegionQuery query = container.createQuery();
-        if (manager == null) return true;
         // Get all the applicable regions, as some will overlap
         ApplicableRegionSet regions = query.getApplicableRegions(BukkitAdapter.adapt(loc));
         return regions.testState(player != null ? WorldGuardPlugin.inst().wrapPlayer(player) : null, flag);
@@ -70,7 +79,8 @@ public class FlagHandler {
             Method setInit = registry.getClass().getDeclaredMethod("setInitialized", boolean.class);
             setInit.invoke(registry, b);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            System.out.println("SPWorldGuardAddon > Some cool hacky stuff went wrong. Here's an error to slap in the devs' faces.");
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR,
+                    "Some cool hacky stuff went wrong. Here's an error to slap in the devs' faces.");
             e.printStackTrace();
         }
     }
@@ -78,15 +88,19 @@ public class FlagHandler {
     private void forceRegister(StateFlag flag) {
         try {
             registry.register(flag);
+            SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Registered the flag " + flag.getName() + ".");
         } catch (FlagConflictException ex) {
+            SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Flag " + flag.getName() + " already exists. Forcing it in...");
             // Force it in
             try {
                 Field flagsField = registry.getClass().getDeclaredField("flags");
                 flagsField.setAccessible(true);
                 ConcurrentMap<String, Flag<?>> flags = (ConcurrentMap<String, Flag<?>>) flagsField.get(registry);
                 flags.put(flag.getName().toLowerCase(), flag);
+                SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Successfully registered flag " + flag.getName() + ".");
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
+                SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "Failed to register flag " + flag.getName() + ".");
             }
         }
     }

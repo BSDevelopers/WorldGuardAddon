@@ -7,9 +7,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import simplepets.brainsynder.addon.AddonPermissions;
+import simplepets.brainsynder.addon.PermissionData;
 import simplepets.brainsynder.addon.PetAddon;
 import simplepets.brainsynder.api.Namespace;
 import simplepets.brainsynder.api.event.entity.PetEntitySpawnEvent;
+import simplepets.brainsynder.api.plugin.SimplePets;
+import simplepets.brainsynder.debug.DebugLevel;
 
 import java.util.List;
 
@@ -22,8 +26,8 @@ public class WorldGuardAddon extends PetAddon implements Listener {
     public boolean shouldEnable() {
         Plugin worldGuard = Bukkit.getPluginManager().getPlugin("WorldGuard");
         if (worldGuard == null || !worldGuard.isEnabled()) {
-            System.out.println("WorldGuard either wasn't found or isn't enabled.");
-            System.out.println("Please ensure it is installed correctly.");
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "WorldGuard either wasn't found or isn't enabled.");
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "Please ensure it is installed correctly.");
             return false;
         }
         return true;
@@ -36,7 +40,11 @@ public class WorldGuardAddon extends PetAddon implements Listener {
             return;
         }
         Bukkit.getPluginManager().registerEvents(this, simplePets);
+        SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Registered listeners.");
         handler = new FlagHandler();
+        SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Registered flags. (Hopefully)");
+        AddonPermissions.register(this, new PermissionData("pet.bypass.worldguard"));
+        SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Registered permission.");
     }
 
     @Override
@@ -64,6 +72,7 @@ public class WorldGuardAddon extends PetAddon implements Listener {
         Player player = event.getUser().getPlayer().getPlayer();
         if (player == null) return;
         event.setCancelled(!handler.canPetSpawn(player, player.getLocation()));
+        SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Is PetEntitySpawnEvent cancelled after WG check: " + event.isCancelled());
     }
 
 }

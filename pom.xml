@@ -39,7 +39,7 @@
         <dependency>
             <groupId>simplepets.brainsynder</groupId>
             <artifactId>API</artifactId>
-            <version>5.0-BUILD-18</version>
+            <version>5.0-BUILD-20</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
