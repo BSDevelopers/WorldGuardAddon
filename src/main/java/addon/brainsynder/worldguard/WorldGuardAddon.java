@@ -40,11 +40,11 @@ public class WorldGuardAddon extends PetAddon implements Listener {
             return;
         }
         Bukkit.getPluginManager().registerEvents(this, simplePets);
-        SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Registered listeners.");
+        SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered listeners.");
         handler = new FlagHandler();
-        SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Registered flags. (Hopefully)");
+        SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered flags. (Hopefully)");
         AddonPermissions.register(this, new PermissionData("pet.bypass.worldguard"));
-        SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Registered permission.");
+        SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered permission.");
     }
 
     @Override
@@ -72,7 +72,7 @@ public class WorldGuardAddon extends PetAddon implements Listener {
         Player player = event.getUser().getPlayer().getPlayer();
         if (player == null) return;
         event.setCancelled(!handler.canPetSpawn(player, player.getLocation()));
-        SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Is PetEntitySpawnEvent cancelled after WG check: " + event.isCancelled());
+        SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Is PetEntitySpawnEvent cancelled after WG check: " + event.isCancelled());
     }
 
 }

@@ -53,9 +53,9 @@ public class FlagHandler {
 
     private boolean query(Player player, Location loc, StateFlag flag) {
         if (player != null) {
-            SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Player " + player.getName() + " exists.");
+            SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Player " + player.getName() + " exists.");
             if (player.hasPermission("pet.bypass.worldguard")) {
-                SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Player has the bypass permission for WG. Skipping...");
+                SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Player has the bypass permission for WG. Skipping...");
                 return true;
             }
         }
@@ -63,7 +63,7 @@ public class FlagHandler {
         // Get the region manager for the world we're inWorld
         RegionManager manager = container.get(BukkitAdapter.adapt(loc.getWorld()));
         if (manager == null) {
-            SimplePets.getDebugLogger().debug(DebugLevel.DEBUG,
+            SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN,
                     "No region manager found for " + loc.getWorld().getName() + ". Will be passing this as a green light.");
             return true;
         }
@@ -88,19 +88,19 @@ public class FlagHandler {
     private void forceRegister(StateFlag flag) {
         try {
             registry.register(flag);
-            SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Registered the flag " + flag.getName() + ".");
+            SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered the flag " + flag.getName() + ".");
         } catch (FlagConflictException ex) {
-            SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Flag " + flag.getName() + " already exists. Forcing it in...");
+            SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Flag " + flag.getName() + " already exists. Forcing it in...");
             // Force it in
             try {
                 Field flagsField = registry.getClass().getDeclaredField("flags");
                 flagsField.setAccessible(true);
                 ConcurrentMap<String, Flag<?>> flags = (ConcurrentMap<String, Flag<?>>) flagsField.get(registry);
                 flags.put(flag.getName().toLowerCase(), flag);
-                SimplePets.getDebugLogger().debug(DebugLevel.DEBUG, "Successfully registered flag " + flag.getName() + ".");
+                SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Successfully registered flag " + flag.getName() + ".");
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
-                SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "Failed to register flag " + flag.getName() + ".");
+                SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Failed to register flag " + flag.getName() + ".");
             }
         }
     }
