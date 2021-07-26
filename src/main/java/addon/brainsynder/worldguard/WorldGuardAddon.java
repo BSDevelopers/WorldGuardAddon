@@ -69,7 +69,7 @@ public class WorldGuardAddon extends PetAddon implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPetSpawn(PetEntitySpawnEvent event) {
-        Player player = event.getUser().getPlayer().getPlayer();
+        Player player = event.getUser().getPlayer();
         if (player == null) return;
         event.setCancelled(!handler.canPetSpawn(player, player.getLocation()));
         SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Is PetEntitySpawnEvent cancelled after WG check: " + event.isCancelled());
