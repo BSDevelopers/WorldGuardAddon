@@ -12,6 +12,8 @@ import simplepets.brainsynder.addon.PermissionData;
 import simplepets.brainsynder.addon.PetAddon;
 import simplepets.brainsynder.api.Namespace;
 import simplepets.brainsynder.api.event.entity.PetEntitySpawnEvent;
+import simplepets.brainsynder.api.event.entity.PetMoveEvent;
+import simplepets.brainsynder.api.event.entity.movment.PetRideEvent;
 import simplepets.brainsynder.api.plugin.SimplePets;
 import simplepets.brainsynder.debug.DebugLevel;
 
@@ -75,4 +77,19 @@ public class WorldGuardAddon extends PetAddon implements Listener {
         SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Is PetEntitySpawnEvent cancelled after WG check: " + event.isCancelled());
     }
 
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onPetMove(PetMoveEvent event) {
+        if (event instanceof PetRideEvent) return;
+        Player player = event.getEntity().getPetUser().getPlayer();
+        if (player == null) return;
+        // TODO - remove pet?
+        event.setCancelled(!handler.canPetEnter(player, event.getTargetLocation()));
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onPetRide(PetRideEvent event) {
+        Player player = event.getEntity().getPetUser().getPlayer();
+        if (player == null) return;
+        event.setCancelled(!handler.canRidePet(player, event.getTargetLocation()));
+    }
 }
