@@ -77,7 +77,7 @@ public class WorldGuardAddon extends PetAddon implements Listener {
                 "&7(e.g. riding, spawning)");
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPetSpawn(PetEntitySpawnEvent event) {
         Player player = event.getUser().getPlayer();
         if (player == null) return;
