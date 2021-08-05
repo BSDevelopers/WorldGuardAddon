@@ -26,9 +26,15 @@ public class WorldGuardAddon extends PetAddon implements Listener {
 
     @Override
     public boolean shouldEnable() {
+        Plugin worldEdit = Bukkit.getPluginManager().getPlugin("WorldEdit");
+        if (worldEdit == null) {
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "WorldEdit wasn't found!");
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "Please ensure it is installed correctly.");
+            return false;
+        }
         Plugin worldGuard = Bukkit.getPluginManager().getPlugin("WorldGuard");
-        if (worldGuard == null || !worldGuard.isEnabled()) {
-            SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "WorldGuard either wasn't found or isn't enabled.");
+        if (worldGuard == null) {
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "WorldGuard wasn't found!");
             SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "Please ensure it is installed correctly.");
             return false;
         }
@@ -43,10 +49,12 @@ public class WorldGuardAddon extends PetAddon implements Listener {
         }
         Bukkit.getPluginManager().registerEvents(this, simplePets);
         SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered listeners.");
-        handler = new FlagHandler();
-        SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered flags. (Hopefully)");
         AddonPermissions.register(this, new PermissionData("pet.bypass.worldguard"));
         SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered permission.");
+        Bukkit.getScheduler().runTaskLater(simplePets, () -> {
+            handler = new FlagHandler();
+            SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered flags. (Hopefully)");
+        }, 40);
     }
 
     @Override
