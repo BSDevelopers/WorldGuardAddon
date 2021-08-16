@@ -59,7 +59,7 @@ public class WorldGuardAddon extends PetAddon implements Listener {
 
     @Override
     public double getVersion() {
-        return 0.3;
+        return 0.4;
     }
 
     @Override
