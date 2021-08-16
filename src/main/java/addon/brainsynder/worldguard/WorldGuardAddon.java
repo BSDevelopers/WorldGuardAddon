@@ -47,13 +47,13 @@ public class WorldGuardAddon extends PetAddon implements Listener {
         if (simplePets == null) {
             return;
         }
-        Bukkit.getPluginManager().registerEvents(this, simplePets);
-        SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered listeners.");
-        AddonPermissions.register(this, new PermissionData("pet.bypass.worldguard"));
-        SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered permission.");
         Bukkit.getScheduler().runTaskLater(simplePets, () -> {
             handler = new FlagHandler();
             SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered flags. (Hopefully)");
+            Bukkit.getPluginManager().registerEvents(this, simplePets);
+            SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered listeners.");
+            AddonPermissions.register(this, new PermissionData("pet.bypass.worldguard"));
+            SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered permission.");
         }, 40);
     }
 
