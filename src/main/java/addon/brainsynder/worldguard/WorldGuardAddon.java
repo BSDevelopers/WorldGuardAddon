@@ -79,6 +79,10 @@ public class WorldGuardAddon extends PetAddon implements Listener {
     public void onPetSpawn(PetEntitySpawnEvent event) {
         Player player = event.getUser().getPlayer();
         if (player == null) return;
+        if (handler == null) {
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "WorldGuard 'handler' is not set... Did something happen when initializing?");
+            return;
+        }
         event.setCancelled(!handler.canPetSpawn(player, player.getLocation()));
         SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Is PetEntitySpawnEvent cancelled after WG check: " + event.isCancelled());
     }
@@ -88,6 +92,10 @@ public class WorldGuardAddon extends PetAddon implements Listener {
         if (event instanceof PetRideEvent) return;
         Player player = event.getEntity().getPetUser().getPlayer();
         if (player == null) return;
+        if (handler == null) {
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "WorldGuard 'handler' is not set... Did something happen when initializing?");
+            return;
+        }
         // TODO - remove pet?
         event.setCancelled(!handler.canPetEnter(player, event.getTargetLocation()));
     }
@@ -96,6 +104,10 @@ public class WorldGuardAddon extends PetAddon implements Listener {
     public void onPetRide(PetRideEvent event) {
         Player player = event.getEntity().getPetUser().getPlayer();
         if (player == null) return;
+        if (handler == null) {
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "WorldGuard 'handler' is not set... Did something happen when initializing?");
+            return;
+        }
         event.setCancelled(!handler.canRidePet(player, event.getTargetLocation()));
     }
 }
