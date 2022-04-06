@@ -1,26 +1,19 @@
 package addon.brainsynder.worldguard;
 
-import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
+import org.bukkit.Location;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import simplepets.brainsynder.addon.AddonPermissions;
 import simplepets.brainsynder.addon.PermissionData;
-import simplepets.brainsynder.addon.PetAddon;
+import simplepets.brainsynder.addon.presets.RegionModule;
 import simplepets.brainsynder.api.Namespace;
-import simplepets.brainsynder.api.event.entity.PetEntitySpawnEvent;
-import simplepets.brainsynder.api.event.entity.PetMoveEvent;
-import simplepets.brainsynder.api.event.entity.movment.PetRideEvent;
 import simplepets.brainsynder.api.plugin.SimplePets;
+import simplepets.brainsynder.api.user.PetUser;
 import simplepets.brainsynder.debug.DebugLevel;
 
-import java.util.List;
-
 @Namespace(namespace = "WorldGuard")
-public class WorldGuardAddon extends PetAddon implements Listener {
+public class WorldGuardAddon extends RegionModule implements Listener {
 
     private FlagHandler handler;
 
@@ -42,72 +35,51 @@ public class WorldGuardAddon extends PetAddon implements Listener {
     }
 
     @Override
-    public void init() {
-        Plugin simplePets = Bukkit.getPluginManager().getPlugin("SimplePets");
-        if (simplePets == null) {
-            return;
+    public boolean isSpawningAllowed(PetUser petUser, Location location) {
+        if (handler == null) {
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR,
+                    "WorldGuard 'handler' is not set... Did something happen when initializing?");
+            return true;
         }
+        return handler.canPetSpawn(petUser.getPlayer(), location);
+    }
+
+    @Override
+    public boolean isMovingAllowed(PetUser petUser, Location location) {
+        if (handler == null) {
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR,
+                    "WorldGuard 'handler' is not set... Did something happen when initializing?");
+            return true;
+        }
+        return handler.canPetEnter(petUser.getPlayer(), location);
+    }
+
+    @Override
+    public boolean isRidingAllowed(PetUser petUser, Location location) {
+        if (handler == null) {
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR,
+                    "WorldGuard 'handler' is not set... Did something happen when initializing?");
+            return true;
+        }
+        return handler.canRidePet(petUser.getPlayer(), location);
+    }
+
+    @Override
+    public boolean isMountingAllowed(PetUser petUser, Location location) {
+        if (handler == null) {
+            SimplePets.getDebugLogger().debug(DebugLevel.ERROR,
+                    "WorldGuard 'handler' is not set... Did something happen when initializing?");
+            return true;
+        }
+        return handler.canMountPet(petUser.getPlayer(), location);
+    }
+
+    @Override
+    public void init() {
         handler = new FlagHandler();
         SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered flags. (Hopefully)");
-        Bukkit.getPluginManager().registerEvents(this, simplePets);
         SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered listeners.");
         AddonPermissions.register(this, new PermissionData("pet.bypass.worldguard"));
         SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Registered permission.");
-    }
-
-    @Override
-    public double getVersion() {
-        return 0.5;
-    }
-
-    @Override
-    public String getAuthor() {
-        return "Thatsmusic99";
-    }
-
-    @Override
-    public List<String> getDescription() {
-        return Lists.newArrayList(
-                "&7This addon hooks into",
-                "&7WorldGuard so that you can",
-                "&7stop specific pet events from",
-                "&7occurring in specific regions.",
-                "&7(e.g. riding, spawning)");
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onPetSpawn(PetEntitySpawnEvent event) {
-        Player player = event.getUser().getPlayer();
-        if (player == null) return;
-        if (handler == null) {
-            SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "WorldGuard 'handler' is not set... Did something happen when initializing?");
-            return;
-        }
-        event.setCancelled(!handler.canPetSpawn(player, player.getLocation()));
-        SimplePets.getDebugLogger().debug(DebugLevel.HIDDEN, "Is PetEntitySpawnEvent cancelled after WG check: " + event.isCancelled());
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onPetMove(PetMoveEvent event) {
-        if (event instanceof PetRideEvent) return;
-        Player player = event.getEntity().getPetUser().getPlayer();
-        if (player == null) return;
-        if (handler == null) {
-            SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "WorldGuard 'handler' is not set... Did something happen when initializing?");
-            return;
-        }
-        // TODO - remove pet?
-        event.setCancelled(!handler.canPetEnter(player, event.getTargetLocation()));
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onPetRide(PetRideEvent event) {
-        Player player = event.getEntity().getPetUser().getPlayer();
-        if (player == null) return;
-        if (handler == null) {
-            SimplePets.getDebugLogger().debug(DebugLevel.ERROR, "WorldGuard 'handler' is not set... Did something happen when initializing?");
-            return;
-        }
-        event.setCancelled(!handler.canRidePet(player, event.getTargetLocation()));
     }
 }

@@ -1,0 +1,15 @@
+{
+  "name": "WorldGuard",
+  "author": "Thatsmusic99",
+
+  "version": 0.6,
+  "supported-build": 163,
+
+  "description": [
+    "&7This addon hooks into",
+    "&7WorldGuard so that you can",
+    "&7stop specific pet events from",
+    "&7occurring in specific regions.",
+    "&7(e.g. riding, spawning)"
+  ]
+}

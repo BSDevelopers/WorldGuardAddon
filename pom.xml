@@ -39,13 +39,13 @@
         <dependency>
             <groupId>simplepets.brainsynder</groupId>
             <artifactId>API</artifactId>
-            <version>5.0-BUILD-75</version>
+            <version>5.0-BUILD-163</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>lib.brainsynder</groupId>
             <artifactId>API</artifactId>
-            <version>B87</version>
+            <version>B101</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
