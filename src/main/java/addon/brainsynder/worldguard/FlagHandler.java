@@ -25,6 +25,7 @@ public class FlagHandler {
 
     public StateFlag ALLOW_PET_SPAWN = new StateFlag("allow-pet-spawn", true);
     public StateFlag ALLOW_PET_ENTER = new StateFlag("allow-pet-enter", true);
+    public StateFlag ALLOW_PET_MOUNTING = new StateFlag("allow-pet-mounting", true);
     public StateFlag ALLOW_PET_RIDING = new StateFlag("allow-pet-riding", true);
     private final FlagRegistry registry;
 
@@ -34,6 +35,7 @@ public class FlagHandler {
         setInitialised(false);
         forceRegister(ALLOW_PET_ENTER);
         forceRegister(ALLOW_PET_SPAWN);
+        forceRegister(ALLOW_PET_MOUNTING);
         forceRegister(ALLOW_PET_RIDING);
         setInitialised(true);
         reloadWG();
@@ -49,6 +51,10 @@ public class FlagHandler {
 
     public boolean canRidePet(Player player, Location loc) {
         return query(player, loc, ALLOW_PET_RIDING);
+    }
+
+    public boolean canMountPet(Player player, Location loc) {
+        return query(player, loc, ALLOW_PET_MOUNTING);
     }
 
     private boolean query(Player player, Location loc, StateFlag flag) {
