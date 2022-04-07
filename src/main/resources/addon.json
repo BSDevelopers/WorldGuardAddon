@@ -11,5 +11,16 @@
     "&7stop specific pet events from",
     "&7occurring in specific regions.",
     "&7(e.g. riding, spawning)"
+  ],
+
+  "plugin-support": [
+    {
+      "name": "WorldEdit",
+      "url": "https://dev.bukkit.org/projects/worldedit/"
+    },
+    {
+      "name": "WorldGuard",
+      "url": "https://dev.bukkit.org/projects/worldguard/"
+    }
   ]
 }
